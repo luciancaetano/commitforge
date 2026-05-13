@@ -25,6 +25,7 @@ program
 
 program
   .command("commit")
+  .alias("c")
   .description("Generate a commit message, confirm, and run git commit")
   .option("-c, --config <path>", "Path to .commitforge.yml config file")
   .option("-i, --instructions <path>", "Path to .commitforge.md instructions file")

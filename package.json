@@ -21,10 +21,14 @@
   "devDependencies": {
     "@types/js-yaml": "^4.0.9",
     "@types/node": "^20.14.0",
+    "@vitest/coverage-v8": "^4.1.6",
     "ts-node": "^10.9.2",
-    "typescript": "^5.4.5"
+    "typescript": "^5.4.5",
+    "vitest": "^4.1.6"
   },
   "engines": {
     "node": ">=18.0.0"
-  }
+  },
+  "license": "MIT",
+  "author": "Lucian Caetano"
 }
