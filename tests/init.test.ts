@@ -23,28 +23,28 @@ afterEach(() => {
 });
 
 describe("runInit — file creation", () => {
-  it("creates .commitforge.yml", () => {
+  it("creates .commitpilot.yml", () => {
     runInit();
-    expect(fs.existsSync(path.join(dir, ".commitforge.yml"))).toBe(true);
+    expect(fs.existsSync(path.join(dir, ".commitpilot.yml"))).toBe(true);
   });
 
-  it("creates .commitforge.md", () => {
+  it("creates .commitpilot.md", () => {
     runInit();
-    expect(fs.existsSync(path.join(dir, ".commitforge.md"))).toBe(true);
+    expect(fs.existsSync(path.join(dir, ".commitpilot.md"))).toBe(true);
   });
 
-  it("generated .commitforge.yml contains required fields", () => {
+  it("generated .commitpilot.yml contains required fields", () => {
     runInit();
-    const content = fs.readFileSync(path.join(dir, ".commitforge.yml"), "utf8");
+    const content = fs.readFileSync(path.join(dir, ".commitpilot.yml"), "utf8");
     expect(content).toContain("provider:");
     expect(content).toContain("model:");
     expect(content).toContain("timeoutMs:");
     expect(content).toContain("temperature:");
   });
 
-  it("generated .commitforge.md contains Conventional Commits spec", () => {
+  it("generated .commitpilot.md contains Conventional Commits spec", () => {
     runInit();
-    const content = fs.readFileSync(path.join(dir, ".commitforge.md"), "utf8");
+    const content = fs.readFileSync(path.join(dir, ".commitpilot.md"), "utf8");
     expect(content).toContain("Conventional Commits");
     expect(content).toContain("feat");
     expect(content).toContain("fix");
@@ -53,15 +53,15 @@ describe("runInit — file creation", () => {
 });
 
 describe("runInit — idempotency", () => {
-  it("does not overwrite existing .commitforge.md", () => {
-    const mdPath = path.join(dir, ".commitforge.md");
+  it("does not overwrite existing .commitpilot.md", () => {
+    const mdPath = path.join(dir, ".commitpilot.md");
     fs.writeFileSync(mdPath, "my custom rules");
     runInit();
     expect(fs.readFileSync(mdPath, "utf8")).toBe("my custom rules");
   });
 
-  it("does not overwrite existing .commitforge.yml", () => {
-    const ymlPath = path.join(dir, ".commitforge.yml");
+  it("does not overwrite existing .commitpilot.yml", () => {
+    const ymlPath = path.join(dir, ".commitpilot.yml");
     fs.writeFileSync(ymlPath, "provider: openai\n");
     runInit();
     expect(fs.readFileSync(ymlPath, "utf8")).toBe("provider: openai\n");
@@ -69,19 +69,19 @@ describe("runInit — idempotency", () => {
 
   it("is safe to run multiple times", () => {
     runInit();
-    const yml = fs.readFileSync(path.join(dir, ".commitforge.yml"), "utf8");
-    const md = fs.readFileSync(path.join(dir, ".commitforge.md"), "utf8");
+    const yml = fs.readFileSync(path.join(dir, ".commitpilot.yml"), "utf8");
+    const md = fs.readFileSync(path.join(dir, ".commitpilot.md"), "utf8");
     runInit();
-    expect(fs.readFileSync(path.join(dir, ".commitforge.yml"), "utf8")).toBe(yml);
-    expect(fs.readFileSync(path.join(dir, ".commitforge.md"), "utf8")).toBe(md);
+    expect(fs.readFileSync(path.join(dir, ".commitpilot.yml"), "utf8")).toBe(yml);
+    expect(fs.readFileSync(path.join(dir, ".commitpilot.md"), "utf8")).toBe(md);
   });
 });
 
 describe("runInit — .gitignore", () => {
-  it("creates .gitignore with /.commitforge.yml when none exists", () => {
+  it("creates .gitignore with /.commitpilot.yml when none exists", () => {
     runInit();
     const content = fs.readFileSync(path.join(dir, ".gitignore"), "utf8");
-    expect(content).toContain("/.commitforge.yml");
+    expect(content).toContain("/.commitpilot.yml");
   });
 
   it("appends to an existing .gitignore without removing other entries", () => {
@@ -91,28 +91,28 @@ describe("runInit — .gitignore", () => {
     const content = fs.readFileSync(gitignorePath, "utf8");
     expect(content).toContain("node_modules/");
     expect(content).toContain("dist/");
-    expect(content).toContain("/.commitforge.yml");
+    expect(content).toContain("/.commitpilot.yml");
   });
 
   it("does not duplicate the entry if already present", () => {
     const gitignorePath = path.join(dir, ".gitignore");
-    fs.writeFileSync(gitignorePath, "/.commitforge.yml\n");
+    fs.writeFileSync(gitignorePath, "/.commitpilot.yml\n");
     runInit();
     const lines = fs
       .readFileSync(gitignorePath, "utf8")
       .split("\n")
-      .filter((l) => l.includes(".commitforge.yml"));
+      .filter((l) => l.includes(".commitpilot.yml"));
     expect(lines).toHaveLength(1);
   });
 
   it("does not duplicate when entry exists without leading slash", () => {
     const gitignorePath = path.join(dir, ".gitignore");
-    fs.writeFileSync(gitignorePath, ".commitforge.yml\n");
+    fs.writeFileSync(gitignorePath, ".commitpilot.yml\n");
     runInit();
     const lines = fs
       .readFileSync(gitignorePath, "utf8")
       .split("\n")
-      .filter((l) => l.includes(".commitforge.yml"));
+      .filter((l) => l.includes(".commitpilot.yml"));
     expect(lines).toHaveLength(1);
   });
 });

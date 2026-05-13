@@ -1,6 +1,6 @@
 {
   "name": "commitpilot",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "AI-powered git commit message generator",
   "bin": {
     "commitpilot": "./dist/index.js",
@@ -10,11 +10,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/luciancaetano/commitforge"
+    "url": "https://github.com/luciancaetano/commitpilot"
   },
-  "homepage": "https://github.com/luciancaetano/commitforge#readme",
+  "homepage": "https://github.com/luciancaetano/commitpilot#readme",
   "bugs": {
-    "url": "https://github.com/luciancaetano/commitforge/issues"
+    "url": "https://github.com/luciancaetano/commitpilot/issues"
   },
   "scripts": {
     "build": "tsc",

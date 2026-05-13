@@ -1,0 +1,7 @@
+provider: ollama
+model: qwen2.5-coder:7b
+baseUrl: http://172.26.64.1:11434
+apiKey: null
+timeoutMs: 30000
+temperature: 0.2
+maxTokens: 512

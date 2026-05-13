@@ -28,7 +28,7 @@ describe("loadConfig", () => {
 
   it("parses all fields from a valid YAML file", () => {
     fs.writeFileSync(
-      path.join(dir, ".commitforge.yml"),
+      path.join(dir, ".commitpilot.yml"),
       [
         "provider: openai",
         "model: gpt-4o-mini",
@@ -50,7 +50,7 @@ describe("loadConfig", () => {
   });
 
   it("uses defaults for missing fields", () => {
-    fs.writeFileSync(path.join(dir, ".commitforge.yml"), "provider: anthropic\n");
+    fs.writeFileSync(path.join(dir, ".commitpilot.yml"), "provider: anthropic\n");
     const cfg = loadConfig(dir);
     expect(cfg.provider).toBe("anthropic");
     expect(cfg.model).toBe("qwen2.5-coder:7b");
@@ -58,22 +58,22 @@ describe("loadConfig", () => {
   });
 
   it("treats yaml null as null for apiKey", () => {
-    fs.writeFileSync(path.join(dir, ".commitforge.yml"), "apiKey: null\n");
+    fs.writeFileSync(path.join(dir, ".commitpilot.yml"), "apiKey: null\n");
     expect(loadConfig(dir).apiKey).toBeNull();
   });
 
   it("treats missing apiKey as null", () => {
-    fs.writeFileSync(path.join(dir, ".commitforge.yml"), "provider: ollama\n");
+    fs.writeFileSync(path.join(dir, ".commitpilot.yml"), "provider: ollama\n");
     expect(loadConfig(dir).apiKey).toBeNull();
   });
 
   it("throws on malformed YAML", () => {
-    fs.writeFileSync(path.join(dir, ".commitforge.yml"), ": bad: yaml: [\n");
+    fs.writeFileSync(path.join(dir, ".commitpilot.yml"), ": bad: yaml: [\n");
     expect(() => loadConfig(dir)).toThrow();
   });
 
   it("throws when config root is not a mapping", () => {
-    fs.writeFileSync(path.join(dir, ".commitforge.yml"), "- item1\n- item2\n");
+    fs.writeFileSync(path.join(dir, ".commitpilot.yml"), "- item1\n- item2\n");
     expect(() => loadConfig(dir)).toThrow("expected a YAML mapping");
   });
 
@@ -87,7 +87,7 @@ describe("loadConfig", () => {
 
   it("ignores non-string values for provider and model", () => {
     fs.writeFileSync(
-      path.join(dir, ".commitforge.yml"),
+      path.join(dir, ".commitpilot.yml"),
       "provider: 123\nmodel: true\n"
     );
     const cfg = loadConfig(dir);
@@ -102,7 +102,7 @@ describe("loadInstructions", () => {
   });
 
   it("returns trimmed file content", () => {
-    fs.writeFileSync(path.join(dir, ".commitforge.md"), "  # My rules\n\n");
+    fs.writeFileSync(path.join(dir, ".commitpilot.md"), "  # My rules\n\n");
     expect(loadInstructions(dir)).toBe("# My rules");
   });
 
