@@ -7,7 +7,7 @@ export class OpenAIProvider implements LLMProvider {
   protected readonly envKey: string = "OPENAI_API_KEY";
 
   async generate(request: LLMRequest): Promise<string> {
-    const { prompt, config } = request;
+    const { system, user, config } = request;
     const apiKey = config.apiKey ?? process.env[this.envKey];
 
     if (!apiKey) {
@@ -23,7 +23,10 @@ export class OpenAIProvider implements LLMProvider {
     try {
       response = await client.chat.completions.create({
         model: config.model,
-        messages: [{ role: "user", content: prompt }],
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
         temperature: config.temperature ?? 0.2,
         max_tokens: config.maxTokens ?? 512,
       });

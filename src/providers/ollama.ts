@@ -3,16 +3,19 @@ import type { LLMProvider, LLMRequest } from "../types.js";
 
 export class OllamaProvider implements LLMProvider {
   async generate(request: LLMRequest): Promise<string> {
-    const { prompt, config } = request;
+    const { system, user, config } = request;
     const host = (config.baseUrl ?? "http://localhost:11434").replace(/\/$/, "");
 
     const client = new Ollama({ host });
 
     let response;
     try {
-      response = await client.generate({
+      response = await client.chat({
         model: config.model,
-        prompt,
+        messages: [
+          { role: "system", content: system },
+          { role: "user", content: user },
+        ],
         stream: false,
         options: {
           temperature: config.temperature ?? 0.2,
@@ -24,6 +27,6 @@ export class OllamaProvider implements LLMProvider {
       throw new Error(`Ollama error (${host}): ${msg}`);
     }
 
-    return response.response.trim();
+    return (response.message.content ?? "").trim();
   }
 }

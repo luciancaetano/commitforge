@@ -3,7 +3,7 @@ import type { LLMProvider, LLMRequest } from "../types.js";
 
 export class AnthropicProvider implements LLMProvider {
   async generate(request: LLMRequest): Promise<string> {
-    const { prompt, config } = request;
+    const { system, user, config } = request;
     const apiKey = config.apiKey ?? process.env["ANTHROPIC_API_KEY"];
 
     if (!apiKey) {
@@ -21,7 +21,8 @@ export class AnthropicProvider implements LLMProvider {
         model: config.model,
         max_tokens: config.maxTokens ?? 512,
         temperature: config.temperature ?? 0.2,
-        messages: [{ role: "user", content: prompt }],
+        system,
+        messages: [{ role: "user", content: user }],
       });
     } catch (err) {
       throw new Error(`Anthropic error: ${(err as Error).message}`);

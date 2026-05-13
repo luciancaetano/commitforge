@@ -3,7 +3,7 @@ import { execSync } from "child_process";
 import type { GenerateOptions, commitloomConfig, GitContext, LLMProvider } from "../types.js";
 import { collectGitContext } from "../git/index.js";
 import { loadConfig, loadInstructions } from "../config/index.js";
-import { buildPrompt } from "../prompt.js";
+import { buildPrompt, buildRegeneratePrompt, sanitizeMessage } from "../prompt.js";
 import { createProvider } from "../providers/index.js";
 
 // ── input helpers ──────────────────────────────────────────────────────────────
@@ -68,17 +68,12 @@ async function regenerate(
   const feedback = await readLine("What should change? ");
   if (!feedback) return current;
 
-  const prompt = [
-    buildPrompt(gitContext, instructions, params),
-    "---",
-    `Previously generated message: ${current}`,
-    `User feedback: ${feedback}`,
-    "Generate a new commit message incorporating this feedback. Single line only. Use the same language as the instructions.",
-  ].join("\n\n");
+  const base = buildPrompt(gitContext, instructions, params);
+  const regen = buildRegeneratePrompt(base, current, feedback);
 
   process.stderr.write("Regenerating...\n");
-  const result = await provider.generate({ prompt, config });
-  return result.trim() || current;
+  const raw = await provider.generate({ ...regen, config });
+  return sanitizeMessage(raw) || current;
 }
 
 // ── git ────────────────────────────────────────────────────────────────────────
@@ -118,7 +113,9 @@ export async function runCommitCommand(options: GenerateOptions): Promise<void> 
   process.stderr.write("Generating commit message...\n");
 
   const provider = createProvider(config);
-  let message = (await provider.generate({ prompt: buildPrompt(gitContext, instructions, params), config })).trim();
+  const built = buildPrompt(gitContext, instructions, params);
+  const raw = await provider.generate({ ...built, config });
+  let message = sanitizeMessage(raw);
 
   if (!message) {
     throw new Error("LLM returned an empty response. Check your provider configuration.");
@@ -135,7 +132,7 @@ export async function runCommitCommand(options: GenerateOptions): Promise<void> 
       return;
     }
 
-    if (key === "n" || key === "q" || key === "") {
+    if (key === "n" || key === "q" || key === "") {
       process.stderr.write("Aborted.\n");
       process.exit(0);
     }

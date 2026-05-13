@@ -17,7 +17,8 @@ export interface GitContext {
 }
 
 export interface LLMRequest {
-  prompt: string;
+  system: string;
+  user: string;
   config: commitloomConfig;
 }
 
