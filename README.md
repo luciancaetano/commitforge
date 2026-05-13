@@ -8,14 +8,35 @@
 
 ```bash
 npm install -g commitloom
+cloom install            # register git loom as a native git subcommand
 ```
 
 ## Quick start
 
 ```bash
-commitloom init      # creates .commitloom.yml and .commitloom.md in your repo
+cloom init      # creates .commitloom.yml and .commitloom.md in your repo
 git add .
-cloom c              # generate and confirm commit
+git loom        # generate and confirm commit
+```
+
+---
+
+## Usage
+
+`git loom` works like any built-in git command — no aliases, no shell config:
+
+```bash
+git loom                          # generate and confirm commit
+git loom -- --ticket PROJ-42      # inject context variables
+git loom -- --scope auth --breaking-change
+```
+
+`cloom install` creates a `git-loom` executable in `~/.local/bin` (or `/usr/local/bin`). Git finds commands named `git-<name>` in the `PATH` automatically.
+
+To remove it:
+
+```bash
+cloom uninstall
 ```
 
 ---
@@ -24,12 +45,13 @@ cloom c              # generate and confirm commit
 
 | Command | Description |
 |---------|-------------|
+| `cloom install` | Register `git loom` as a native git subcommand |
+| `cloom uninstall` | Remove the `git loom` subcommand |
 | `cloom init` | Initialize config and instruction files in the current repo |
-| `cloom c` | Read staged diff → generate message → confirm → commit |
+| `cloom c` | Same as `git loom` (direct alias) |
 | `cloom c --config <path>` | Override config file for this run |
 | `cloom c --instructions <path>` | Override instruction file for this run |
 | `cloom c --verbose` | Show prompt and raw LLM response |
-| `cloom c -- --key value` | Inject context variables (see below) |
 
 ---
 
@@ -103,8 +125,8 @@ Follow Conventional Commits. Keep the subject under 72 characters.
 Inject runtime values into the LLM prompt by passing them after `--`:
 
 ```bash
-cloom c -- --task-id 1001
-cloom c -- --ticket PROJ-42 --scope payments
+git loom -- --task-id 1001
+git loom -- --ticket PROJ-42 --scope payments
 ```
 
 Use `{{key}}` placeholders in `.commitloom.md` to interpolate them:

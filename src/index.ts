@@ -19,7 +19,7 @@ const MASCOT = `
   ┃   ╰─────────────╯   ┃
   ◉━━━━━━━━━━━━━━━━━━━━━◉
 
-    commitloom · cloom · weave your commits
+    commitloom · git loom · weave your commits
 `;
 
 function parseExtraParams(args: string[]): Record<string, string> {
@@ -110,17 +110,22 @@ program
   .addHelpText(
     "after",
     `
-Context variables (commit command only):
+Get started:
+  cloom install              register 'git loom' as a native git subcommand
+  cloom init                 create .commitloom.yml and .commitloom.md
+  git loom                   generate and confirm a commit
+
+Context variables:
   Pass arbitrary key/value pairs after -- to inject runtime context into the
   LLM prompt. Use {{key}} placeholders in .commitloom.md to reference them.
 
   Examples:
-    cloom c -- --task-id 1001
-    cloom c -- --ticket PROJ-42 --scope auth
-    cloom c -- --task-id=1001 --reviewer alice
+    git loom -- --task-id 1001
+    git loom -- --ticket PROJ-42 --scope auth
+    git loom -- --task-id=1001 --reviewer alice
 
   Boolean flags (no value) are passed as "true":
-    cloom c -- --breaking-change`
+    git loom -- --breaking-change`
   )
   .action(() => {
     program.help({ error: false });
@@ -141,27 +146,29 @@ program
 program
   .command("commit")
   .alias("c")
-  .description("Generate a commit message, confirm, and run git commit")
+  .description("Generate a commit message, confirm, and run git commit (also: git loom)")
   .option("-c, --config <path>", "Path to .commitloom.yml config file")
   .option("-i, --instructions <path>", "Path to .commitloom.md instructions file")
   .option("-v, --verbose", "Print debug info to stderr")
   .addHelpText(
     "after",
     `
+Tip: after 'cloom install', use 'git loom' instead of 'cloom c'.
+
 Context variables:
   Append -- followed by --key value pairs to pass runtime context to the LLM.
   These are injected as a "Context variables" section in the prompt and can
   also be used as {{key}} placeholders inside .commitloom.md.
 
   Syntax:
-    cloom c -- --<key> <value>      key/value pair
-    cloom c -- --<key>=<value>      alternative syntax
-    cloom c -- --<flag>             boolean flag (value = "true")
+    git loom -- --<key> <value>      key/value pair
+    git loom -- --<key>=<value>      alternative syntax
+    git loom -- --<flag>             boolean flag (value = "true")
 
   Examples:
-    cloom c -- --task-id 1001
-    cloom c -- --ticket PROJ-42 --scope payments
-    cloom c -- --task-id=1001 --breaking-change
+    git loom -- --task-id 1001
+    git loom -- --ticket PROJ-42 --scope payments
+    git loom -- --task-id=1001 --breaking-change
 
   .commitloom.md template example:
     This commit is related to task #{{task-id}}.
@@ -178,7 +185,7 @@ Context variables:
 
 program
   .command("install")
-  .description("Install git-loom so 'git loom' works as an alias for 'cloom c'")
+  .description("Register 'git loom' as a native git subcommand")
   .action(() => {
     try {
       runInstall();
