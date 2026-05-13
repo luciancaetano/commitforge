@@ -1,4 +1,4 @@
-export interface CommitPilotConfig {
+export interface commitloomConfig {
   provider: string;
   model: string;
   baseUrl?: string;
@@ -18,7 +18,7 @@ export interface GitContext {
 
 export interface LLMRequest {
   prompt: string;
-  config: CommitPilotConfig;
+  config: commitloomConfig;
 }
 
 export interface LLMProvider {

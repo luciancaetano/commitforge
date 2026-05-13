@@ -1,20 +1,20 @@
 {
-  "name": "commitpilot",
+  "name": "commitloom",
   "version": "0.1.2",
   "description": "AI-powered git commit message generator",
   "bin": {
-    "commitpilot": "./dist/index.js",
-    "cmp": "./dist/index.js"
+    "commitloom": "./dist/index.js",
+    "cloom": "./dist/index.js"
   },
   "author": "Lucian Caetano",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/luciancaetano/commitpilot"
+    "url": "https://github.com/luciancaetano/commitloom"
   },
-  "homepage": "https://github.com/luciancaetano/commitpilot#readme",
+  "homepage": "https://github.com/luciancaetano/commitloom#readme",
   "bugs": {
-    "url": "https://github.com/luciancaetano/commitpilot/issues"
+    "url": "https://github.com/luciancaetano/commitloom/issues"
   },
   "scripts": {
     "build": "tsc",

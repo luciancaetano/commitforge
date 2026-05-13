@@ -52,7 +52,7 @@ export function collectGitContext(): GitContext {
   const diff = getStagedDiff(repoRoot);
 
   if (!diff) {
-    throw new Error("No staged changes found. Run `git add <files>` before using commitpilot.");
+    throw new Error("No staged changes found. Run `git add <files>` before using commitloom.");
   }
 
   return {

@@ -7,13 +7,13 @@ import type { GenerateOptions } from "./types.js";
 const program = new Command();
 
 program
-  .name("commitpilot")
+  .name("commitloom")
   .description("AI-powered git commit message generator")
   .version("1.0.0");
 
 program
   .command("init")
-  .description("Initialize CommitPilot in the current repository")
+  .description("Initialize commitloom in the current repository")
   .action(() => {
     try {
       runInit();
@@ -27,8 +27,8 @@ program
   .command("commit")
   .alias("c")
   .description("Generate a commit message, confirm, and run git commit")
-  .option("-c, --config <path>", "Path to .commitpilot.yml config file")
-  .option("-i, --instructions <path>", "Path to .commitpilot.md instructions file")
+  .option("-c, --config <path>", "Path to .commitloom.yml config file")
+  .option("-i, --instructions <path>", "Path to .commitloom.md instructions file")
   .option("-v, --verbose", "Print debug info to stderr")
   .action(async (options: GenerateOptions) => {
     try {

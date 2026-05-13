@@ -1,12 +1,12 @@
 import * as fs from "fs";
 import * as path from "path";
 import * as yaml from "js-yaml";
-import type { CommitPilotConfig } from "../types.js";
+import type { commitloomConfig } from "../types.js";
 
-const CONFIG_FILE = ".commitpilot.yml";
-const INSTRUCTIONS_FILE = ".commitpilot.md";
+const CONFIG_FILE = ".commitloom.yml";
+const INSTRUCTIONS_FILE = ".commitloom.md";
 
-const DEFAULTS: CommitPilotConfig = {
+const DEFAULTS: commitloomConfig = {
   provider: "ollama",
   model: "qwen2.5-coder:7b",
   baseUrl: undefined,
@@ -16,7 +16,7 @@ const DEFAULTS: CommitPilotConfig = {
   maxTokens: 512,
 };
 
-export function loadConfig(repoRoot: string, overridePath?: string): CommitPilotConfig {
+export function loadConfig(repoRoot: string, overridePath?: string): commitloomConfig {
   const configPath = overridePath ?? path.join(repoRoot, CONFIG_FILE);
 
   if (!fs.existsSync(configPath)) {

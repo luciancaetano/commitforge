@@ -1,6 +1,6 @@
 import * as readline from "readline";
 import { execSync } from "child_process";
-import type { GenerateOptions, CommitPilotConfig, GitContext, LLMProvider } from "../types.js";
+import type { GenerateOptions, commitloomConfig, GitContext, LLMProvider } from "../types.js";
 import { collectGitContext } from "../git/index.js";
 import { loadConfig, loadInstructions } from "../config/index.js";
 import { buildPrompt } from "../prompt.js";
@@ -59,7 +59,7 @@ function editLine(current: string): Promise<string> {
 
 async function regenerate(
   provider: LLMProvider,
-  config: CommitPilotConfig,
+  config: commitloomConfig,
   gitContext: GitContext,
   instructions: string | null,
   current: string

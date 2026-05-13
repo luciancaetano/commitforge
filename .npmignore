@@ -13,8 +13,8 @@ tsconfig.json
 dist/**/*.map
 
 # Repo config files (not part of the package)
-.commitpilot.yml
-.commitpilot.md
+.commitloom.yml
+.commitloom.md
 .gitignore
 
 # CI/CD

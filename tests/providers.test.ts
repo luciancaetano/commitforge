@@ -4,9 +4,9 @@ import { OllamaProvider } from "../src/providers/ollama.js";
 import { OpenAIProvider } from "../src/providers/openai.js";
 import { OpenRouterProvider } from "../src/providers/openrouter.js";
 import { AnthropicProvider } from "../src/providers/anthropic.js";
-import type { commitpilotConfig } from "../src/types.js";
+import type { commitloomConfig } from "../src/types.js";
 
-const base: commitpilotConfig = { provider: "ollama", model: "test-model" };
+const base: commitloomConfig = { provider: "ollama", model: "test-model" };
 
 describe("createProvider", () => {
   it("returns OllamaProvider for 'ollama'", () => {

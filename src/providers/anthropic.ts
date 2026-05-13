@@ -8,7 +8,7 @@ export class AnthropicProvider implements LLMProvider {
 
     if (!apiKey) {
       throw new Error(
-        "Anthropic API key is required. Set apiKey in .commitpilot.yml or ANTHROPIC_API_KEY env var."
+        "Anthropic API key is required. Set apiKey in .commitloom.yml or ANTHROPIC_API_KEY env var."
       );
     }
 

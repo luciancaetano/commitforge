@@ -2,7 +2,7 @@ import * as fs from "fs";
 import * as path from "path";
 import { findRepoRoot } from "../git/index.js";
 
-const DEFAULT_CONFIG = `# CommitPilot configuration
+const DEFAULT_CONFIG = `# commitloom configuration
 # This file is gitignored — safe to store API keys here.
 #
 # Supported providers: ollama, openai, openrouter, anthropic
@@ -178,7 +178,7 @@ PKCE removes the need for a client secret on public clients.
 \`\`\`
 refactor(config)!: rename baseUrl to endpoint across all providers
 
-BREAKING CHANGE: the \`baseUrl\` key in .commitpilot.yml must be renamed
+BREAKING CHANGE: the \`baseUrl\` key in .commitloom.yml must be renamed
 to \`endpoint\`. Existing configs will fail to load until updated.
 \`\`\`
 
@@ -210,23 +210,23 @@ function addToGitignore(repoRoot: string, entry: string): void {
 export function runInit(): void {
   const repoRoot = findRepoRoot();
 
-  const configPath = path.join(repoRoot, ".commitpilot.yml");
+  const configPath = path.join(repoRoot, ".commitloom.yml");
   if (!fs.existsSync(configPath)) {
     fs.writeFileSync(configPath, DEFAULT_CONFIG, "utf8");
-    process.stderr.write(`  created .commitpilot.yml\n`);
+    process.stderr.write(`  created .commitloom.yml\n`);
   } else {
-    process.stderr.write(`  .commitpilot.yml already exists — skipped\n`);
+    process.stderr.write(`  .commitloom.yml already exists — skipped\n`);
   }
 
-  const instructionsPath = path.join(repoRoot, ".commitpilot.md");
+  const instructionsPath = path.join(repoRoot, ".commitloom.md");
   if (!fs.existsSync(instructionsPath)) {
     fs.writeFileSync(instructionsPath, DEFAULT_INSTRUCTIONS, "utf8");
-    process.stderr.write(`  created .commitpilot.md\n`);
+    process.stderr.write(`  created .commitloom.md\n`);
   } else {
-    process.stderr.write(`  .commitpilot.md already exists — skipped\n`);
+    process.stderr.write(`  .commitloom.md already exists — skipped\n`);
   }
 
-  addToGitignore(repoRoot, ".commitpilot.yml");
+  addToGitignore(repoRoot, ".commitloom.yml");
 
-  process.stderr.write("\nDone. Edit .commitpilot.yml to configure your provider.\n");
+  process.stderr.write("\nDone. Edit .commitloom.yml to configure your provider.\n");
 }

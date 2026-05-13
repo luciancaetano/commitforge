@@ -1,7 +1,7 @@
-# CommitPilot
+# CommitLoom
 
 <p align="center">
-  <img src="logo.png" alt="CommitPilot" width="250" />
+  <img src="logo.png" alt="commitloom" width="300" />
 </p>
 
 **Stop burning tokens on commit messages.**
@@ -13,7 +13,7 @@ AI-powered git commit message generator that runs locally or against any LLM pro
 ## Install
 
 ```bash
-npm install -g commitpilot
+npm install -g commitloom
 ```
 
 ---
@@ -21,51 +21,52 @@ npm install -g commitpilot
 ## Quick start
 
 ```bash
-# 1. Initialize CommitPilot in your repo
-commitpilot init
+# 1. Initialize commitloom in your repo
+commitloom init
 
-# 2. Edit .commitpilot.yml to point at your provider
+# 2. Edit .commitloom.yml to point at your provider
 #    (it's already gitignored — safe for API keys)
 
 # 3. Stage your changes and generate a commit
 git add .
-commitpilot c
+commitloom c   # or: cloom c
 ```
 
 ---
 
 ## Commands
 
-### `commitpilot init`
+### `commitloom init` · alias `cloom init`
 
-Sets up CommitPilot in the current repository.
+Sets up commitloom in the current repository.
 
-- Creates `.commitpilot.yml` with provider configuration
-- Creates `.commitpilot.md` with Conventional Commits instructions
-- Adds `.commitpilot.yml` to `.gitignore` automatically
-- Never overwrites `.commitpilot.md` if it already exists
+- Creates `.commitloom.yml` with provider configuration
+- Creates `.commitloom.md` with Conventional Commits instructions
+- Adds `.commitloom.yml` to `.gitignore` automatically
+- Never overwrites `.commitloom.md` if it already exists
 
 ```bash
-commitpilot init
+commitloom init   # or: cloom init
 ```
 
-### `commitpilot commit` · alias `commitpilot c`
+### `commitloom commit` · alias `commitloom c` · alias `cloom c`
 
 Reads your staged diff, generates a commit message via your configured LLM, shows it to you, and asks for confirmation before running `git commit`.
 
 ```bash
-commitpilot commit
-commitpilot c        # short alias
+commitloom commit
+commitloom c        # short alias
+cloom c             # shortest alias
 
 # Override config or instructions for a single run
-commitpilot c --config path/to/.commitpilot.yml
-commitpilot c --instructions path/to/rules.md
-commitpilot c --verbose
+cloom c --config path/to/.commitloom.yml
+cloom c --instructions path/to/rules.md
+cloom c --verbose
 ```
 
 ---
 
-## Configuration (`.commitpilot.yml`)
+## Configuration (`.commitloom.yml`)
 
 This file is **gitignored by default** — safe to store API keys.
 
@@ -125,7 +126,7 @@ API keys can also be set via environment variables:
 
 ---
 
-## Customizing commit rules (`.commitpilot.md`)
+## Customizing commit rules (`.commitloom.md`)
 
 This file is committed to your repo and shared with your team. It contains the instructions sent to the LLM on every run. Edit it to enforce your project's conventions.
 
@@ -142,7 +143,7 @@ The default template follows the full [Conventional Commits v1.0.0](https://www.
 
 ## Setting up Ollama (local, free, no API key)
 
-Ollama lets you run LLMs fully offline on your own machine. It's the default provider for CommitPilot.
+Ollama lets you run LLMs fully offline on your own machine. It's the default provider for commitloom.
 
 ### Install Ollama
 
@@ -173,7 +174,7 @@ Download the `.exe` installer from [ollama.com/download](https://ollama.com/down
 ollama pull qwen2.5-coder:7b
 ```
 
-This is the default model in `.commitpilot.yml`. It's fast, lightweight, and purpose-built for code understanding.
+This is the default model in `.commitloom.yml`. It's fast, lightweight, and purpose-built for code understanding.
 
 ---
 
@@ -199,7 +200,7 @@ Pick a model based on your hardware. All run locally with Ollama.
 - Models **32B+** are impractical without a GPU — responses take minutes per commit
 - Apple Silicon (M1/M2/M3) uses unified memory, so it handles larger models much better than x86 CPU-only
 
-**To use a different model**, edit `.commitpilot.yml`:
+**To use a different model**, edit `.commitloom.yml`:
 ```yaml
 provider: ollama
 model: qwen3:14b        # ← swap here
@@ -214,10 +215,10 @@ baseUrl: http://localhost:11434
 git add <files>
        │
        ▼
-commitpilot commit
+commitloom commit
        │
-       ├─ reads .commitpilot.yml   → provider + model config
-       ├─ reads .commitpilot.md    → commit rules for the LLM
+       ├─ reads .commitloom.yml   → provider + model config
+       ├─ reads .commitloom.md    → commit rules for the LLM
        ├─ runs git diff --cached   → staged changes only
        │
        ▼

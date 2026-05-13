@@ -12,7 +12,7 @@ export class OpenAIProvider implements LLMProvider {
 
     if (!apiKey) {
       throw new Error(
-        `${this.providerName} API key is required. Set apiKey in .commitpilot.yml or ${this.envKey} env var.`
+        `${this.providerName} API key is required. Set apiKey in .commitloom.yml or ${this.envKey} env var.`
       );
     }
 
