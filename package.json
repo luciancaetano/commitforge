@@ -1,6 +1,6 @@
 {
   "name": "commitloom",
-  "version": "0.1.19",
+  "version": "0.1.20",
   "description": "AI-powered CLI that generates Conventional Commits from your staged diff — works with Ollama, OpenAI, Anthropic, and OpenRouter",
   "keywords": [
     "git",
