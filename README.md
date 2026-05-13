@@ -1,8 +1,19 @@
 # CommitLoom
 
-<p align="center">
-  <img src="logo.png" alt="commitloom" width="300" />
-</p>
+```sh
+         ✦   ˚   ✦
+        ╭─────────╮
+        │  ◕   ◕ │
+        ╰────┬────╯
+  ◉━━━━━━━━━━┻━━━━━━━━━━◉
+  ┃   ╭─────────────╮    ┃
+  ┃   │ ●  ───────  │    ┃
+  ┃   │    ───────  │    ┃
+  ┃   │    ─────    │    ┃
+  ┃   │ ●  ───────  │    ┃
+  ┃   ╰─────────────╯    ┃
+  ◉━━━━━━━━━━━━━━━━━━━━━◉
+```
 
 **Stop burning tokens on commit messages.**
 
@@ -62,6 +73,55 @@ cloom c             # shortest alias
 cloom c --config path/to/.commitloom.yml
 cloom c --instructions path/to/rules.md
 cloom c --verbose
+
+# Pass context variables to the LLM (see "Context variables" below)
+cloom c -- --task-id 1001
+cloom c -- --ticket PROJ-42 --scope payments
+```
+
+---
+
+## Context variables
+
+Pass arbitrary key/value pairs after `--` to inject runtime context into the LLM prompt. This is useful when your `.commitloom.md` has templates that require values only known at commit time — like a task ID, ticket number, or reviewer name.
+
+### Syntax
+
+```bash
+cloom c -- --<key> <value>       # key/value pair
+cloom c -- --<key>=<value>       # alternative syntax
+cloom c -- --<flag>              # boolean flag (passed as "true")
+```
+
+### Examples
+
+```bash
+cloom c -- --task-id 1001
+cloom c -- --ticket PROJ-42 --scope payments
+cloom c -- --task-id=1001 --reviewer alice --breaking-change
+```
+
+### How it works
+
+Each pair is injected into the LLM prompt in two ways:
+
+1. **Template interpolation** — `{{key}}` placeholders in `.commitloom.md` are replaced with the provided values before the prompt is sent.
+2. **Context section** — a `## Context variables` block is appended to the prompt so the LLM always sees the values, even without explicit placeholders.
+
+### `.commitloom.md` template example
+
+```
+Follow Conventional Commits.
+This commit is related to task #{{task-id}}.
+{{scope}} — use this as the commit scope if provided.
+```
+
+Running `cloom c -- --task-id 1001 --scope payments` would send:
+
+```
+Follow Conventional Commits.
+This commit is related to task #1001.
+payments — use this as the commit scope if provided.
 ```
 
 ---

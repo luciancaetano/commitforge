@@ -62,13 +62,14 @@ async function regenerate(
   config: commitloomConfig,
   gitContext: GitContext,
   instructions: string | null,
+  params: Record<string, string>,
   current: string
 ): Promise<string> {
   const feedback = await readLine("What should change? ");
   if (!feedback) return current;
 
   const prompt = [
-    buildPrompt(gitContext, instructions),
+    buildPrompt(gitContext, instructions, params),
     "---",
     `Previously generated message: ${current}`,
     `User feedback: ${feedback}`,
@@ -103,17 +104,21 @@ export async function runCommitCommand(options: GenerateOptions): Promise<void> 
   const gitContext = collectGitContext();
   const config = loadConfig(gitContext.repoRoot, options.config);
   const instructions = loadInstructions(gitContext.repoRoot, options.instructions);
+  const params = options.params ?? {};
 
   if (options.verbose) {
     process.stderr.write(`Provider: ${config.provider} / ${config.model}\n`);
     process.stderr.write(`Branch: ${gitContext.branch ?? "unknown"}\n`);
     process.stderr.write(`Staged diff: ${gitContext.diff.length} chars\n`);
+    if (Object.keys(params).length > 0) {
+      process.stderr.write(`Params: ${JSON.stringify(params)}\n`);
+    }
   }
 
   process.stderr.write("Generating commit message...\n");
 
   const provider = createProvider(config);
-  let message = (await provider.generate({ prompt: buildPrompt(gitContext, instructions), config })).trim();
+  let message = (await provider.generate({ prompt: buildPrompt(gitContext, instructions, params), config })).trim();
 
   if (!message) {
     throw new Error("LLM returned an empty response. Check your provider configuration.");
@@ -143,7 +148,7 @@ export async function runCommitCommand(options: GenerateOptions): Promise<void> 
 
     if (key === "r") {
       process.stderr.write("\n");
-      message = await regenerate(provider, config, gitContext, instructions, message);
+      message = await regenerate(provider, config, gitContext, instructions, params, message);
       continue;
     }
   }

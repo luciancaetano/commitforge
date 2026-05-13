@@ -29,4 +29,5 @@ export interface GenerateOptions {
   config?: string;
   instructions?: string;
   verbose?: boolean;
+  params?: Record<string, string>;
 }

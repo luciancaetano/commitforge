@@ -6,21 +6,37 @@ Write in the imperative mood (e.g., "add feature" not "added feature").
 Keep the subject line under 72 characters.
 Do not include explanations or markdown — output only the commit message.`;
 
+function interpolate(template: string, params: Record<string, string>): string {
+  return template.replace(/\{\{([\w-]+)\}\}/g, (match, key: string) => params[key] ?? match);
+}
+
 export function buildPrompt(
   gitContext: GitContext,
-  instructions: string | null
+  instructions: string | null,
+  params: Record<string, string> = {}
 ): string {
-  const effectiveInstructions = instructions?.trim() || DEFAULT_INSTRUCTIONS;
+  const raw = instructions?.trim() || DEFAULT_INSTRUCTIONS;
+  const effectiveInstructions = Object.keys(params).length > 0 ? interpolate(raw, params) : raw;
 
   const parts: string[] = [
     "You are a git commit message generator.",
     "",
     "## Instructions",
     effectiveInstructions,
+  ];
+
+  if (Object.keys(params).length > 0) {
+    parts.push("", "## Context variables");
+    for (const [key, value] of Object.entries(params)) {
+      parts.push(`${key}: ${value}`);
+    }
+  }
+
+  parts.push(
     "",
     "## Repository Context",
     `Branch: ${gitContext.branch ?? "unknown"}`,
-  ];
+  );
 
   if (gitContext.recentLog) {
     parts.push("Recent commits:");
