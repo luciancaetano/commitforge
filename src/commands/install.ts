@@ -39,7 +39,8 @@ function findInstalled(): string | null {
     if (fs.existsSync(p)) return p;
   }
   try {
-    const cmd = IS_WINDOWS ? "where git-loom" : "which git-loom 2>/dev/null";
+    // Redirect stderr to null to suppress "not found" messages from where/which.
+    const cmd = IS_WINDOWS ? "where git-loom 2>nul" : "which git-loom 2>/dev/null";
     const result = execSync(cmd, { encoding: "utf8" }).trim().split(/\r?\n/)[0];
     if (result) return result;
   } catch {
@@ -48,21 +49,27 @@ function findInstalled(): string | null {
   return null;
 }
 
-function inPath(dir: string): boolean {
-  const entries = (process.env.PATH ?? "").split(PATH_SEP);
-  // Windows PATH is case-insensitive; normalize both sides for comparison.
-  if (IS_WINDOWS) {
-    const normalized = dir.toLowerCase();
-    return entries.some((e) => e.toLowerCase() === normalized);
-  }
-  return entries.includes(dir);
-}
-
 function pickInstallDir(): string {
+  const entries = (process.env.PATH ?? "").split(PATH_SEP);
+  // Windows PATH is case-insensitive and may have trailing slashes — normalize both sides.
+  const normalize = IS_WINDOWS
+    ? (p: string) => path.resolve(p).toLowerCase().replace(/[/\\]+$/, "")
+    : (p: string) => p;
+  const pathSet = new Set(entries.map(normalize));
   for (const dir of candidateDirs()) {
-    if (inPath(dir)) return dir;
+    if (pathSet.has(normalize(dir))) return dir;
   }
   return candidateDirs()[0];
+}
+
+function isAccessible(): boolean {
+  try {
+    const cmd = IS_WINDOWS ? "where git-loom 2>nul" : "which git-loom 2>/dev/null";
+    const result = execSync(cmd, { encoding: "utf8" }).trim();
+    return result.length > 0;
+  } catch {
+    return false;
+  }
 }
 
 export function runInstall(): void {
@@ -88,13 +95,14 @@ export function runInstall(): void {
   fs.writeFileSync(target, SCRIPT_CONTENT, writeOpts);
   process.stderr.write(`  installed ${target}\n`);
 
-  if (!inPath(dir)) {
+  if (!isAccessible()) {
     if (IS_WINDOWS) {
-      process.stderr.write(`\n  ${dir} is not in your PATH. Add it via System Properties > Environment Variables.\n`);
+      process.stderr.write(`\n  ${dir} is not in your PATH.\n`);
+      process.stderr.write("  Add it via: System Properties > Environment Variables > Path\n");
     } else {
       process.stderr.write(`\n  ${dir} is not in your PATH. Add to your shell profile:\n`);
       process.stderr.write(`    export PATH="$PATH:${dir}"\n`);
-      process.stderr.write("  Then reload the shell or run: source ~/.bashrc\n");
+      process.stderr.write("  Then reload: source ~/.bashrc\n");
     }
   } else {
     process.stderr.write("\nDone. Try: git loom\n");
